@@ -1,4 +1,6 @@
-To convert C++ 98 book cricket game to Python 3.9 logic, and add more features.
+IMPORTANT NOTE: If you wish to test out the code, please run new_code.py for the same. old_code.cpp is merely a reference file for my purposes, and is not meant to be run.
+
+Aim: To convert C++ 98 book cricket game to Python 3.9 logic, and add more features.
 
 Rough project pathway:
 
