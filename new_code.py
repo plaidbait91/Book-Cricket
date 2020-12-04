@@ -1,4 +1,5 @@
 import random
+from time import sleep
 
 class match:
 
@@ -11,6 +12,7 @@ class match:
             wick = self.score[self.bat][2]
             who = self.score[self.bat][0]
             target = self.score[not self.bat][1] + 1
+            pages = self.pages
 
             currScore = ""
             currScore += who + ": " + str(runs) + "/" + str(wick)
@@ -63,7 +65,7 @@ class match:
             ch = input("Type n + ENTER to flip book, or press ENTER to quit game: ")
 
             if ch == "n":
-                page = random.randint(1, 100)
+                page = random.randint(1, pages)
                 ball = page % 10
 
                 if ball:
@@ -89,7 +91,91 @@ class match:
 
         self.play()
 
-test = match(100, 5, 3, True)
+print("Welcome to Book Cricket!")
+input("Press ENTER to continue...")
+
+
+print("\n\nEnter number of overs:", end = " ")
+flag = -1
+
+while flag == -1:
+    try:
+        o = int(input())
+    except ValueError:
+        print("Please enter a positive integer only:", end = " ")
+    else:
+        if o < 1:
+            print("Please enter atleast 1 over:", end = " ")
+        else:
+            flag = 1
+
+print("\nEnter number of pages:", end = " ")
+flag = -1
+
+while flag == -1:
+    try:
+        p = int(input())
+    except ValueError:
+        print("Please enter a positive integer only:", end = " ")
+    else:
+        if p < 10:
+            print("Please enter atleast 10 pages:", end = " ")
+        else:
+            flag = 1
+
+print("\nEnter number of wickets:", end = " ")
+flag = -1
+
+while flag == -1:
+    try:
+        w = int(input())
+    except ValueError:
+        print("Please enter a positive integer only:", end = " ")
+    else:
+        if w < 1:
+            print("Please enter atleast 1 wicket:", end = " ")
+        else:
+            flag = 1
+
+print("\n\nToss time!")
+print("Flipping coin", end = "")
+
+for i in range(3):
+    print(".", end = "")
+    sleep(1)
+
+toss = random.randint(0, 1)
+
+if toss:
+    ch = input("You've won the toss!\nBat or bowl?: ")
+    
+    while 1:
+        if ch.lower() == "bat":
+            bat = True
+            break
+        elif ch.lower() == "bowl":
+            bat = False
+            break
+        else:
+            ch = input("Please enter a valid choice: ")
+
+else:
+    cch = random.randint(0, 1)
+    bat = cch
+    print("CPU has won the toss and chosen to", end = " ")
+
+    if cch:
+        print("bowl.")
+    else:
+        print("bat.")
+
+input("Press ENTER to start the match...")
+play = match(p, o, w, bat)
+
+
+
+
+
 
 
     
