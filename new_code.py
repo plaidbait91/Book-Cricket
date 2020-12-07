@@ -90,8 +90,10 @@ class match:
                     self.score[self.bat][2] += 1
 
                 self.played += 1
-            else:
-                break
+            elif ch == "":
+                q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
+                if q == "q":
+                    break
 
 
     def __init__(self, pages, overs, wickets, bat):
