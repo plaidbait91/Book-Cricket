@@ -34,11 +34,19 @@ class match:
                     print("OUT!")
                 print()
 
-            result = ["You lose. Better luck next time!", "You win!!"]
+            result = ["You lose by ", "You win by ", ". Better luck next time.", ". Hurray!"]
+            res = ""
 
             if self.isSecInn:
                 if runs >= target:
-                    print(result[self.bat])
+                    res += result[self.bat] + str(self.wickets - wick) + " wicket"
+                    
+                    if self.wickets - wick > 1:
+                        res += "s"
+
+                    res += result[self.bat + 2]
+
+                    print(res)
                     
                     input("Press ENTER to exit...")
                     break
@@ -47,7 +55,13 @@ class match:
                         if runs == target - 1:
                             print("It's a tie!")
                         else:
-                            print(result[not self.bat])
+                            res += result[not self.bat] + str(target - runs - 1) + " run"
+                            if target - runs > 2:
+                                res += "s"
+
+                            res += result[(not self.bat) + 2]
+                                
+                            print(res)
                             
                         input("Press ENTER to exit...")
                         break
@@ -142,7 +156,7 @@ print("Flipping coin", end = "")
 
 for i in range(3):
     print(".", end = "")
-    sleep(1)
+    sleep(0.5)
 
 toss = random.randint(0, 1)
 
