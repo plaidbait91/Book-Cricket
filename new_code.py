@@ -1,5 +1,7 @@
 import random
+import pickle
 from time import sleep
+from datetime import datetime
 
 class match:
 
@@ -76,7 +78,7 @@ class match:
                     input("1st innings ends. Press ENTER to play 2nd innings...")
                     continue
 
-            ch = input("Type n + ENTER to flip book, or press ENTER to quit game: ")
+            ch = input("Type \n1. n + ENTER to flip book\n2. s + ENTER to save game\n3. press ENTER to quit game\n-> ")
 
             if ch == "n":
                 page = random.randint(1, pages)
@@ -90,10 +92,37 @@ class match:
                     self.score[self.bat][2] += 1
 
                 self.played += 1
+                
+            elif ch == "s":
+                self.__save()
+                input("Game saved successfully! Press ENTER to continue with game...")
+                        
             elif ch == "":
-                q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
-                if q == "q":
-                    break
+                if self.saved:
+                    q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
+                    if q == "q":
+                        break
+                else:
+                    q = input("\nAre you sure you want to QUIT without saving? Please press \n(q) to quit without saving\n(s) to save and quit\n-> ")
+                    if q == "q":
+                        break
+                    elif q == "s":
+                        self.__save()
+                        input("Game saved successfully! Press ENTER to exit game...")
+                        break
+
+    def __save(self):
+        self.id = input("Enter ID to save game: ")
+        
+        while len(self.id) < 4:
+            self.id = input("User-entered ID must be atleast 4 characters long: ")
+
+        self.id += " "*4 + str(datetime.now())
+
+        with open('games.pkl', 'ab') as games:
+            pickle.dump(self, games)
+
+        self.saved = True
 
 
     def __init__(self, pages, overs, wickets, bat):
@@ -104,8 +133,8 @@ class match:
         self.score = {True: ["User", 0, 0], False: ["CPU", 0, 0]}
         self.played = 0
         self.isSecInn = False
-
-        self.play()
+        self.id = ""
+        self.saved = False
 
 print("Welcome to Book Cricket!")
 input("Press ENTER to continue...")
@@ -186,7 +215,8 @@ else:
         print("bat.")
 
 input("Press ENTER to start the match...")
-play = match(p, o, w, bat)
+lets = match(p, o, w, bat)
+lets.play()
 
 
 
