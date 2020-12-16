@@ -246,12 +246,21 @@ while True:
 
 
         if len(g):
+            
             s = input("\nEnter serial no. of game to be loaded here, or press (q) to return to main menu-> ")
             if s != "q":
-                s = int(s)
-                if s <= len(g) and s > 0:
-                    load = g[s - 1]
-                    load.play()
+                while True:
+                    try:
+                        s = int(s)
+                        if s <= len(g) and s > 0:
+                            load = g[s - 1]
+                            load.play()
+                            break
+                        else:
+                            s = input("\nInvalid input. Please try again -> ")
+                    except ValueError:
+                        s = input("\nInvalid input. Please try again -> ")
+                    
 
     elif choice.lower() == "q":
         q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
