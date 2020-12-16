@@ -16,6 +16,8 @@ class match:
             target = self.score[not self.bat][1] + 1
             pages = self.pages
 
+            print("\n" + "*"*40 + "\n")
+
             currScore = ""
             currScore += who + ": " + str(runs) + "/" + str(wick)
             print(currScore)
@@ -50,7 +52,7 @@ class match:
 
                     print(res)
                     
-                    input("Press ENTER to exit...")
+                    input("Press ENTER to return to main menu...")
                     break
                 else:
                     if wick == self.wickets or self.played == self.balls:
@@ -65,7 +67,7 @@ class match:
                                 
                             print(res)
                             
-                        input("Press ENTER to exit...")
+                        input("Press ENTER to return to main menu...")
                         break
                 
             else:
@@ -80,7 +82,7 @@ class match:
 
             ch = input("Type \n1. n + ENTER to flip book\n2. s + ENTER to save game\n3. press ENTER to quit game\n-> ")
 
-            if ch == "n":
+            if ch.lower() == "n":
                 page = random.randint(1, pages)
                 ball = page % 10
 
@@ -93,20 +95,20 @@ class match:
 
                 self.played += 1
                 
-            elif ch == "s":
+            elif ch.lower() == "s":
                 self.__save()
                 input("Game saved successfully! Press ENTER to continue with game...")
                         
             elif ch == "":
                 if self.saved:
                     q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
-                    if q == "q":
+                    if q.lower() == "q":
                         break
                 else:
                     q = input("\nAre you sure you want to QUIT without saving? Please press \n(q) to quit without saving\n(s) to save and quit\n-> ")
-                    if q == "q":
+                    if q.lower() == "q":
                         break
-                    elif q == "s":
+                    elif q.lower() == "s":
                         self.__save()
                         input("Game saved successfully! Press ENTER to exit game...")
                         break
@@ -140,83 +142,130 @@ print("Welcome to Book Cricket!")
 input("Press ENTER to continue...")
 
 
-print("\n\nEnter number of overs:", end = " ")
-flag = -1
+while True:
+    print("\n" + "*"*40 + "\n")
+    choice = input("1. (N)ew game\n2. (L)oad game\n3. (Q)uit\n\n->")
 
-while flag == -1:
-    try:
-        o = int(input())
-    except ValueError:
-        print("Please enter a positive integer only:", end = " ")
-    else:
-        if o < 1:
-            print("Please enter atleast 1 over:", end = " ")
+    if choice.lower() == "n":
+        
+        print("\n\nEnter number of overs:", end = " ")
+        flag = -1
+
+        while flag == -1:
+            try:
+                o = int(input())
+            except ValueError:
+                print("Please enter a positive integer only:", end = " ")
+            else:
+                if o < 1:
+                    print("Please enter atleast 1 over:", end = " ")
+                else:
+                    flag = 1
+
+        print("\nEnter number of pages:", end = " ")
+        flag = -1
+
+        while flag == -1:
+            try:
+                p = int(input())
+            except ValueError:
+                print("Please enter a positive integer only:", end = " ")
+            else:
+                if p < 10:
+                    print("Please enter atleast 10 pages:", end = " ")
+                else:
+                    flag = 1
+
+        print("\nEnter number of wickets:", end = " ")
+        flag = -1
+
+        while flag == -1:
+            try:
+                w = int(input())
+            except ValueError:
+                print("Please enter a positive integer only:", end = " ")
+            else:
+                if w < 1:
+                    print("Please enter atleast 1 wicket:", end = " ")
+                else:
+                    flag = 1
+
+        print("\n\nToss time!")
+        print("Flipping coin", end = "")
+
+        for i in range(3):
+            print(".", end = "")
+            sleep(0.5)
+
+        toss = random.randint(0, 1)
+
+        if toss:
+            ch = input("You've won the toss!\nBat or bowl?: ")
+            
+            while 1:
+                if ch.lower() == "bat":
+                    bat = True
+                    break
+                elif ch.lower() == "bowl":
+                    bat = False
+                    break
+                else:
+                    ch = input("Please enter a valid choice: ")
+
         else:
-            flag = 1
+            cch = random.randint(0, 1)
+            bat = cch
+            print("CPU has won the toss and chosen to", end = " ")
 
-print("\nEnter number of pages:", end = " ")
-flag = -1
+            if cch:
+                print("bowl.")
+            else:
+                print("bat.")
 
-while flag == -1:
-    try:
-        p = int(input())
-    except ValueError:
-        print("Please enter a positive integer only:", end = " ")
-    else:
-        if p < 10:
-            print("Please enter atleast 10 pages:", end = " ")
-        else:
-            flag = 1
+        input("Press ENTER to start the match...")
+        new = match(p, o, w, bat)
+        new.play()
 
-print("\nEnter number of wickets:", end = " ")
-flag = -1
+    elif choice.lower() == "l":
+        g = []
+        i = 1
 
-while flag == -1:
-    try:
-        w = int(input())
-    except ValueError:
-        print("Please enter a positive integer only:", end = " ")
-    else:
-        if w < 1:
-            print("Please enter atleast 1 wicket:", end = " ")
-        else:
-            flag = 1
+        try:
+            with open('games.pkl', 'rb') as games:
+                print("Saved games: ")
+                while True:
+                    try:
+                        game = pickle.load(games)
+                        g.append(game)
+                        print(str(i) + ". " + game.id)
+                        i += 1
+                    except EOFError:
+                        break
+        except FileNotFoundError:
+            print("You currently have no saved games.")
 
-print("\n\nToss time!")
-print("Flipping coin", end = "")
 
-for i in range(3):
-    print(".", end = "")
-    sleep(0.5)
+        if len(g):
+            s = input("\nEnter serial no. of game to be loaded here, or press (q) to return to main menu-> ")
+            if s != "q":
+                s = int(s)
+                if s <= len(g) and s > 0:
+                    load = g[s - 1]
+                    load.play()
 
-toss = random.randint(0, 1)
-
-if toss:
-    ch = input("You've won the toss!\nBat or bowl?: ")
-    
-    while 1:
-        if ch.lower() == "bat":
-            bat = True
+    elif choice.lower() == "q":
+        q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
+        if q.lower() == "q":
             break
-        elif ch.lower() == "bowl":
-            bat = False
-            break
-        else:
-            ch = input("Please enter a valid choice: ")
 
-else:
-    cch = random.randint(0, 1)
-    bat = cch
-    print("CPU has won the toss and chosen to", end = " ")
+        
+        
 
-    if cch:
-        print("bowl.")
-    else:
-        print("bat.")
 
-input("Press ENTER to start the match...")
-lets = match(p, o, w, bat)
-lets.play()
+        
+
+        
+        
 
 
 
