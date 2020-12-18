@@ -144,7 +144,7 @@ input("Press ENTER to continue...")
 
 while True:
     print("\n" + "*"*40 + "\n")
-    choice = input("1. (N)ew game\n2. (L)oad game\n3. (Q)uit\n\n->")
+    choice = input("1. (N)ew game\n2. (L)oad game\n3. (R)ules\n4. (Q)uit\n\n->")
 
     if choice.lower() == "n":
         
@@ -283,7 +283,11 @@ while True:
         else:
             input("You currently have no saved games. Press ENTER to return to main menu...")
                     
-
+    elif choice.lower() == "r":
+        with open('rules.txt') as rules:
+            r = rules.read()
+            input(r)
+            
     elif choice.lower() == "q":
         q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
         if q.lower() == "q":

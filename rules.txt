@@ -1,0 +1,17 @@
+Book cricket is a popular game among schoolchildren, often played in the back benches of boring classes.
+
+The rules are as simple as they get:
+
+A book with numbered pages (preferably a thick one) is flipped and a page is opened at random.
+
+The last digit of the page number determines the runs scored or wickets lost as follows:
+
+(1) if 0 < digit <= 6, it denotes the number of runs scored.
+
+(2) if digit > 6, subtracting 6 from it denotes the runs scored.
+
+(3) if digit = 0, a wicket is lost.
+
+This program stimulates this simple but elegant game.  
+
+Press ENTER to return to main menu...
