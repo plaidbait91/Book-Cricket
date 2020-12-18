@@ -228,38 +228,60 @@ while True:
 
     elif choice.lower() == "l":
         g = []
-        i = 1
 
         try:
             with open('games.pkl', 'rb') as games:
-                print("Saved games: ")
                 while True:
                     try:
                         game = pickle.load(games)
                         g.append(game)
-                        print(str(i) + ". " + game.id)
-                        i += 1
                     except EOFError:
                         break
         except FileNotFoundError:
-            print("You currently have no saved games.")
+            input("You currently have no saved games. Press ENTER to return to main menu...")
 
 
         if len(g):
+            i = 1
+            print("Saved games: ")
+            for _ in g:
+                print(str(i) + ". " + _.id)
+                i += 1
+                
             
-            s = input("\nEnter serial no. of game to be loaded here, or press (q) to return to main menu-> ")
-            if s != "q":
-                while True:
-                    try:
-                        s = int(s)
-                        if s <= len(g) and s > 0:
-                            load = g[s - 1]
-                            load.play()
-                            break
-                        else:
-                            s = input("\nInvalid input. Please try again -> ")
-                    except ValueError:
-                        s = input("\nInvalid input. Please try again -> ")
+            while True:
+                s = input("\nEnter serial no. of game to be loaded, press (d) to remove a save, or press (q) to return to main menu-> ")
+                try:
+                    s = int(s)
+                    if s <= len(g) and s > 0:
+                        load = g[s - 1]
+                        load.play()
+                        break
+                    else:
+                        print("Game not found!")
+                except ValueError:
+                    if s.lower() == "q":
+                        break
+                    elif s.lower() == "d":
+                        while True:
+                            rem = input("Enter index no. of save to be removed -> ")
+                            try:
+                                rem = int(rem)
+                                if rem <= len(g) and rem > 0:
+                                    with open('games.pkl', 'wb') as remove:
+                                        for x in range(len(g)):
+                                            if x != rem - 1:
+                                                pickle.dump(g[x], remove)
+
+                                    input("Save deleted successfully! Press ENTER to continue...")
+                                    break
+                                else:
+                                    print("Game not found!")
+                            except ValueError:
+                                pass
+                            
+        else:
+            input("You currently have no saved games. Press ENTER to return to main menu...")
                     
 
     elif choice.lower() == "q":
