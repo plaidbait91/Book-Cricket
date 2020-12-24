@@ -38,17 +38,18 @@ class match:
                     print("OUT!")
                 print()
 
-            result = ["You lose by ", "You win by ", ". Better luck next time.", ". Hurray!"]
+            win = " win by "
+            result = [". Hurray!", ". Better luck next time."]
             res = ""
 
             if self.isSecInn:
                 if runs >= target:
-                    res += result[self.bat] + str(self.wickets - wick) + " wicket"
+                    res += who + win + str(self.wickets - wick) + " wicket"
                     
                     if self.wickets - wick > 1:
                         res += "s"
 
-                    res += result[self.bat + 2]
+                    res += result[not self.bat]
 
                     print(res)
                     
@@ -59,11 +60,11 @@ class match:
                         if runs == target - 1:
                             print("It's a tie!")
                         else:
-                            res += result[not self.bat] + str(target - runs - 1) + " run"
+                            res += self.score[not self.bat][0] + win + str(target - runs - 1) + " run"
                             if target - runs > 2:
                                 res += "s"
 
-                            res += result[(not self.bat) + 2]
+                            res += result[self.bat]
                                 
                             print(res)
                             
@@ -127,12 +128,12 @@ class match:
         self.saved = True
 
 
-    def __init__(self, pages, overs, wickets, bat):
+    def __init__(self, pages, overs, wickets, bat, u, c):
         self.pages = pages
         self.balls = overs * 6
         self.wickets = wickets
         self.bat = bat
-        self.score = {True: ["User", 0, 0], False: ["CPU", 0, 0]}
+        self.score = {True: [u, 0, 0], False: [c, 0, 0]}
         self.played = 0
         self.isSecInn = False
         self.id = ""
@@ -147,8 +148,46 @@ while True:
     choice = input("1. (N)ew game\n2. (L)oad game\n3. (R)ules\n4. (Q)uit\n\n->")
 
     if choice.lower() == "n":
+
+        teams = ["England", "India", "New Zealand", "Australia", "South Africa", "Pakistan", "Bangladesh", "Sri Lanka", "West Indies", "Afghanistan"]
+        print()
+        for i in range(len(teams)):
+            print(str(i + 1) + ". " + teams[i])
+
+        print("\nEnter index no. of your team:", end = " ")
+        flag = -1
+        while flag == -1:
+            try:
+                user = int(input())
+            except ValueError:
+                print("Invalid input. Please try again:", end = " ")
+            else:
+                if user <= len(teams) and user > 0:
+                    flag = 1
+                else:
+                    print("Invalid input. Please try again:", end = " ")
+
+        print("\nEnter index no. of CPU team:", end = " ")
+        flag = -1
+        while flag == -1:
+            try:
+                cpu = int(input())
+            except ValueError:
+                print("Invalid input. Please try again:", end = " ")
+            else:
+                if cpu <= len(teams) and cpu > 0:
+                    if cpu != user:
+                        flag = 1
+                    else:
+                        print("Please choose a different team for CPU:", end = " ")
+                else:
+                    print("Invalid input. Please try again:", end = " ")
+
+        user = teams[user - 1]
+        cpu = teams[cpu - 1]
+                
         
-        print("\n\nEnter number of overs:", end = " ")
+        print("\nEnter number of overs:", end = " ")
         flag = -1
 
         while flag == -1:
@@ -187,6 +226,8 @@ while True:
             else:
                 if w < 1:
                     print("Please enter atleast 1 wicket:", end = " ")
+                elif w > 10:
+                    print("Please enter atmost 10 wickets:", end = " ")
                 else:
                     flag = 1
 
@@ -200,7 +241,7 @@ while True:
         toss = random.randint(0, 1)
 
         if toss:
-            ch = input("You've won the toss!\nBat or bowl?: ")
+            ch = input(user + " has won the toss and chosen to ___\nBat or bowl?: ")
             
             while 1:
                 if ch.lower() == "bat":
@@ -215,7 +256,7 @@ while True:
         else:
             cch = random.randint(0, 1)
             bat = cch
-            print("CPU has won the toss and chosen to", end = " ")
+            print(cpu + " has won the toss and chosen to", end = " ")
 
             if cch:
                 print("bowl.")
@@ -223,7 +264,7 @@ while True:
                 print("bat.")
 
         input("Press ENTER to start the match...")
-        new = match(p, o, w, bat)
+        new = match(p, o, w, bat, user, cpu)
         new.play()
 
     elif choice.lower() == "l":
