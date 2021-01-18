@@ -3,6 +3,16 @@ import pickle
 from time import sleep
 from datetime import datetime
 
+class Player:
+
+    def __init__(self, name):
+        self.name = name
+        self.runs = 0
+        self.played = 0
+        self.bowled = 0
+        self.wickets = 0
+
+
 class match:
 
     def play(self):
@@ -15,6 +25,8 @@ class match:
             who = self.score[self.bat][0]
             target = self.score[not self.bat][1] + 1
             pages = self.pages
+            bat1 = self.score[self.bat][3][self.pair[0]]
+            bat2 = self.score[self.bat][3][self.pair[1]]
 
             print("\n" + "*"*40 + "\n")
 
@@ -37,6 +49,21 @@ class match:
                 else:
                     print("OUT!")
                 print()
+
+            if wick != 10:
+                print(bat1.name + " " + str(bat1.runs) + "(" + str(bat1.played) + ")", end = "")
+                if not self.strike:
+                    print("*", end = "")
+                print("    ", end = "")
+                
+                print(bat2.name + " " + str(bat2.runs) + "(" + str(bat2.played) + ")", end = "")
+                if self.strike:
+                    print("*", end = "")
+            else:
+                print(self.score[self.bat][3][self.pair[not self.strike]].name + " " + str(self.score[self.bat][3][self.pair[not self.strike]].runs) + "(" + str(self.score[self.bat][3][self.pair[not self.strike]].played) + ")*", end = "")
+
+            print("\n")
+
 
             win = " win by "
             result = [". Hurray!", ". Better luck next time."]
@@ -78,6 +105,8 @@ class match:
                     self.bat = not self.bat
                     ball = -1
                     page = -1
+                    self.pair = [0, 1]
+                    self.strike = 0
                     input("1st innings ends. Press ENTER to play 2nd innings...")
                     continue
 
@@ -87,14 +116,27 @@ class match:
                 page = random.randint(1, pages)
                 ball = page % 10
 
+                self.played += 1
+                self.score[self.bat][3][self.pair[self.strike]].played += 1
+
                 if ball:
                     if ball > 6:
                         ball -= 6
                     self.score[self.bat][1] += ball
+                    self.score[self.bat][3][self.pair[self.strike]].runs += ball
+                    if ball % 2:
+                        self.strike = not self.strike
                 else:
                     self.score[self.bat][2] += 1
+                    if self.score[self.bat][2] != 10:
+                        self.pair[self.strike] = self.score[self.bat][2] + 1
+                    else:
+                        continue
+                    
 
-                self.played += 1
+                if self.played % 6 == 0 and self.played:
+                    self.strike = not self.strike
+
                 
             elif ch.lower() == "s":
                 self.__save()
@@ -133,11 +175,21 @@ class match:
         self.balls = overs * 6
         self.wickets = wickets
         self.bat = bat
-        self.score = {True: [u, 0, 0], False: [c, 0, 0]}
+        self.score = {True: [u, 0, 0, []], False: [c, 0, 0, []]}
         self.played = 0
         self.isSecInn = False
         self.id = ""
         self.saved = False
+
+        for i in range(11):
+            p1 = Player("PlayerA" + str(i + 1))
+            p2 = Player("PlayerB" + str(i + 1))
+            self.score[True][3].append(p1)
+            self.score[False][3].append(p2)
+
+        self.pair = [0, 1]
+        self.strike = 0
+
 
 print("Welcome to Book Cricket!")
 input("Press ENTER to continue...")
@@ -309,11 +361,12 @@ while True:
                             try:
                                 rem = int(rem)
                                 if rem <= len(g) and rem > 0:
-                                    with open('games.pkl', 'wb') as remove:
+                                    with open('games.pkl', 'wb') as r:
                                         for x in range(len(g)):
                                             if x != rem - 1:
-                                                pickle.dump(g[x], remove)
+                                                pickle.dump(g[x], r)
 
+                                    g.remove(g[rem - 1])
                                     input("Save deleted successfully! Press ENTER to continue...")
                                     break
                                 else:
