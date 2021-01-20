@@ -181,12 +181,19 @@ class match:
         self.id = ""
         self.saved = False
 
-        for i in range(11):
-            p1 = Player("PlayerA" + str(i + 1))
-            p2 = Player("PlayerB" + str(i + 1))
-            self.score[True][3].append(p1)
-            self.score[False][3].append(p2)
+        f1 = open(rf'D:\Git Projects\My Projects\Book Cricket\res\{u}.txt')
+        team1 = f1.read().splitlines()
+        for name in team1:
+            self.score[True][3].append(Player(name))
 
+        f2 = open(rf'D:\Git Projects\My Projects\Book Cricket\res\{c}.txt')
+        team2 = f2.read().splitlines()
+        for name in team2:
+            self.score[False][3].append(Player(name))
+
+        f1.close()
+        f2.close()
+        
         self.pair = [0, 1]
         self.strike = 0
 
@@ -386,25 +393,3 @@ while True:
         q = input("\nAre you sure you want to QUIT? Please press (q) to confirm: ")
         if q.lower() == "q":
             break
-
-        
-        
-
-
-        
-
-        
-        
-
-
-
-
-
-
-
-    
-        
-
-
-        
-
