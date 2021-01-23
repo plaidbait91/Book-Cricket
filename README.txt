@@ -3,10 +3,8 @@ Further development is underway.
 
 Rough project pathway:
 
-1) Integrate pygame
-2) Add more possible features: -
-	i) Team names
-	ii) Player names
-	iii) PvP feature?
-
+1) Add more possible features: -
+	i) PvP feature?
+	ii) 
+2) Integrate pygame
 	
