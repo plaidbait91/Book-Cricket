@@ -48,10 +48,10 @@ class match:
                     print(str(ball) + " runs scored.")
                 else:
                     print("OUT!\n")
-                    if self.bat and wick != self.wickets:
+                    if self.bat and wick != 10:
                         side = self.score[True][3]
 
-                        for i in range(self.wickets + 1):
+                        for i in range(11):
                             if not side[i].out and i not in self.pair:
                                 print(str(i + 1) + ") " + side[i].name)
 
@@ -64,7 +64,7 @@ class match:
                             except ValueError:
                                 print("Please enter an integer only:", end = " ")
                             else:
-                                if (nex > self.wickets + 1 or nex <= 0) or (nex - 1 in self.pair or side[nex - 1].out):
+                                if (nex > 11 or nex <= 0) or (nex - 1 in self.pair or side[nex - 1].out):
                                     print("Please enter a valid index number:", end = " ")
                                 else:
                                     flag = 1
@@ -80,7 +80,7 @@ class match:
                 if self.bat and self.played == 0 and self.played != self.balls:
                     side = self.score[True][3]
                     
-                    for i in range(self.wickets + 1):
+                    for i in range(11):
                         print(str(i + 1) + ") " + side[i].name)
 
                     print("\nPick the striker by index number:", end = " ")
@@ -92,7 +92,7 @@ class match:
                         except ValueError:
                             print("Please enter an integer only:", end = " ")
                         else:
-                            if striker > self.wickets + 1 or striker <= 0:
+                            if striker > 11 or striker <= 0:
                                 print("Please enter a valid index number:", end = " ")
                             else:
                                 flag = 1
@@ -107,7 +107,7 @@ class match:
                         except ValueError:
                             print("Please enter an integer only:", end = " ")
                         else:
-                            if nonstriker > self.wickets + 1 or nonstriker <= 0:
+                            if nonstriker > 11 or nonstriker <= 0:
                                 print("Please enter a valid index number:", end = " ")
                             else:
                                 flag = 1
@@ -116,13 +116,13 @@ class match:
                     self.pair[0] = striker
                     self.pair[1] = nonstriker
 
-            if self.played % 6 == 0 and self.played != self.balls:
+            if self.played % 6 == 0 and self.played != self.balls and wick != 10:
                 if (ball != -1 and self.played) or (not self.played):
                     if not self.bat:
                         side = self.score[True][3]
 
                         print()
-                        for i in range(self.wickets, -1, -1):
+                        for i in range(10, -1, -1):
                             if i != self.bowler:
                                 print(str(11 - i) + ") " + side[i].name)
 
@@ -135,7 +135,7 @@ class match:
                             except ValueError:
                                 print("Please enter an integer only:", end = " ")
                             else:
-                                if temp > self.wickets + 1 or temp <= 0 or 11 - temp == self.bowler:
+                                if temp > 11 or temp <= 0 or 11 - temp == self.bowler:
                                     print("Please enter a valid index number:", end = " ")
                                 else:
                                     flag = 1
@@ -147,7 +147,7 @@ class match:
                         temp = self.bowler
 
                         while temp == self.bowler:
-                            temp = random.randint(6, 10)
+                            temp = random.randint(7, 10)
                             
                         self.bowler = temp
 
@@ -157,7 +157,7 @@ class match:
             bat2 = self.score[self.bat][3][self.pair[1]]
             bowl = self.score[not self.bat][3][self.bowler]
 
-            if wick != self.wickets:
+            if wick != 10:
                 print(bat1.name + " " + str(bat1.runs) + "(" + str(bat1.played) + ")", end = "")
                 if not self.strike:
                     print("*", end = "")
@@ -181,9 +181,9 @@ class match:
 
             if self.isSecInn:
                 if runs >= target:
-                    res += who + win + str(self.wickets - wick) + " wicket"
+                    res += who + win + str(10 - wick) + " wicket"
                     
-                    if self.wickets - wick > 1:
+                    if 10 - wick > 1:
                         res += "s"
 
                     res += result[not self.bat]
@@ -193,7 +193,7 @@ class match:
                     input("Press ENTER to return to main menu...")
                     break
                 else:
-                    if wick == self.wickets or self.played == self.balls:
+                    if wick == 10 or self.played == self.balls:
                         if runs == target - 1:
                             print("It's a tie!")
                         else:
@@ -209,7 +209,7 @@ class match:
                         break
                 
             else:
-                if wick == self.wickets or self.played == self.balls:
+                if wick == 10 or self.played == self.balls:
                     self.isSecInn = True
                     self.played = 0
                     self.bat = not self.bat
@@ -245,7 +245,7 @@ class match:
                     self.score[self.bat][3][self.pair[self.strike]].out = True
                     self.score[not self.bat][3][self.bowler].wickets += 1
                     
-                    if self.score[self.bat][2] != self.wickets:
+                    if self.score[self.bat][2] != 10:
                         if not self.bat:
                             self.pair[self.strike] = self.score[self.bat][2] + 1
                     else:
@@ -290,10 +290,9 @@ class match:
         self.saved = True
 
 
-    def __init__(self, pages, overs, wickets, bat, u, c):
+    def __init__(self, pages, overs, bat, u, c):
         self.pages = pages
         self.balls = overs * 6
-        self.wickets = wickets
         self.bat = bat
         self.score = {True: [u, 0, 0, []], False: [c, 0, 0, []]}
         self.played = 0
@@ -302,14 +301,41 @@ class match:
         self.saved = False
 
         f1 = open(f'res\{u}.txt')
-        team1 = f1.read().splitlines()
-        for name in team1:
-            self.score[True][3].append(Player(name))
+        squad1 = f1.read().splitlines()
+        for i in range(15):
+            print(str(i + 1) + ") " + squad1[i])
 
+        print("\nEnter index numbers of 4 players to be benched from the squad.")
+        bench = []
+
+        
+        for i in range(4):
+            print("->", end = " ")
+            flag = -1
+            
+            while flag == -1:
+                try:
+                    temp = int(input())
+                except ValueError:
+                    print("Please enter an integer only:", end = " ")
+                else:
+                    if temp > 15 or temp <= 0:
+                        print("Please enter a valid index number:", end = " ")
+                    else:
+                        flag = 1
+                        temp -= 1
+
+            bench.append(temp)        
+
+        for name in squad1:
+            if squad1.index(name) not in bench:
+                self.score[True][3].append(Player(name))
+
+            
         f2 = open(f'res\{c}.txt')
         team2 = f2.read().splitlines()
-        for name in team2:
-            self.score[False][3].append(Player(name))
+        for i in range(11):
+            self.score[False][3].append(Player(team2[i]))
 
         f1.close()
         f2.close()
@@ -395,22 +421,6 @@ while True:
                 else:
                     flag = 1
 
-        print("\nEnter number of wickets:", end = " ")
-        flag = -1
-
-        while flag == -1:
-            try:
-                w = int(input())
-            except ValueError:
-                print("Please enter a positive integer only:", end = " ")
-            else:
-                if w < 1:
-                    print("Please enter atleast 1 wicket:", end = " ")
-                elif w > 10:
-                    print("Please enter atmost 10 wickets:", end = " ")
-                else:
-                    flag = 1
-
         print("\n\nToss time!")
         print("Flipping coin", end = "")
 
@@ -444,7 +454,7 @@ while True:
                 print("bat.")
 
         input("Press ENTER to start the match...")
-        new = match(p, o, w, bat, user, cpu)
+        new = match(p, o, bat, user, cpu)
         new.play()
 
     elif choice.lower() == "l":
