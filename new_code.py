@@ -11,6 +11,7 @@ class Player:
         self.played = 0
         self.bowled = 0
         self.wickets = 0
+        self.conceded = 0
         self.out = False
 
 
@@ -76,7 +77,7 @@ class match:
                         self.pair[i] = nex
                         
             else:
-                if self.bat and self.played == 0:
+                if self.bat and self.played == 0 and self.played != self.balls:
                     side = self.score[True][3]
                     
                     for i in range(self.wickets + 1):
@@ -115,10 +116,46 @@ class match:
                     self.pair[0] = striker
                     self.pair[1] = nonstriker
 
-                                            
+            if self.played % 6 == 0 and self.played != self.balls:
+                if (ball != -1 and self.played) or (not self.played):
+                    if not self.bat:
+                        side = self.score[True][3]
+
+                        print()
+                        for i in range(self.wickets, -1, -1):
+                            if i != self.bowler:
+                                print(str(11 - i) + ") " + side[i].name)
+
+                        print("\nSelect bowler for next over by index number:", end = " ")
+                        flag = -1
+
+                        while flag == -1:
+                            try:
+                                temp = int(input())
+                            except ValueError:
+                                print("Please enter an integer only:", end = " ")
+                            else:
+                                if temp > self.wickets + 1 or temp <= 0 or 11 - temp == self.bowler:
+                                    print("Please enter a valid index number:", end = " ")
+                                else:
+                                    flag = 1
+                                    temp = 11 - temp
+
+                        self.bowler = temp
+
+                    else:
+                        temp = self.bowler
+
+                        while temp == self.bowler:
+                            temp = random.randint(6, 10)
+                            
+                        self.bowler = temp
+
+                          
             print()
             bat1 = self.score[self.bat][3][self.pair[0]]
             bat2 = self.score[self.bat][3][self.pair[1]]
+            bowl = self.score[not self.bat][3][self.bowler]
 
             if wick != self.wickets:
                 print(bat1.name + " " + str(bat1.runs) + "(" + str(bat1.played) + ")", end = "")
@@ -134,6 +171,9 @@ class match:
 
             print("\n")
 
+            b = str(int((bowl.bowled - bowl.bowled % 6) / 6)) + "." + str(bowl.bowled % 6)
+            print(bowl.name + " " + str(bowl.wickets) + "/" + str(bowl.conceded) + " (" + b + ")\n")
+            
 
             win = " win by "
             result = [". Hurray!", ". Better luck next time."]
@@ -175,6 +215,7 @@ class match:
                     self.bat = not self.bat
                     ball = -1
                     page = -1
+                    self.bowler = -1
                     self.pair = [0, 1]
                     self.strike = 0
                     input("1st innings ends. Press ENTER to play 2nd innings...")
@@ -188,17 +229,22 @@ class match:
 
                 self.played += 1
                 self.score[self.bat][3][self.pair[self.strike]].played += 1
+                self.score[not self.bat][3][self.bowler].bowled += 1
 
                 if ball:
                     if ball > 6:
                         ball -= 6
                     self.score[self.bat][1] += ball
                     self.score[self.bat][3][self.pair[self.strike]].runs += ball
+                    self.score[not self.bat][3][self.bowler].conceded += ball
+                    
                     if ball % 2:
                         self.strike = not self.strike
                 else:
                     self.score[self.bat][2] += 1
                     self.score[self.bat][3][self.pair[self.strike]].out = True
+                    self.score[not self.bat][3][self.bowler].wickets += 1
+                    
                     if self.score[self.bat][2] != self.wickets:
                         if not self.bat:
                             self.pair[self.strike] = self.score[self.bat][2] + 1
@@ -270,6 +316,7 @@ class match:
         
         self.pair = [0, 1]
         self.strike = 0
+        self.bowler = -1
 
 
 print("Welcome to Book Cricket!")
