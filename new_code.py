@@ -317,10 +317,10 @@ class match:
                 try:
                     temp = int(input())
                 except ValueError:
-                    print("Please enter an integer only:", end = " ")
+                    print("Please enter an integer only->", end = " ")
                 else:
                     if temp > 15 or temp <= 0:
-                        print("Please enter a valid index number:", end = " ")
+                        print("Please enter a valid index number->", end = " ")
                     else:
                         flag = 1
                         temp -= 1
@@ -473,14 +473,17 @@ while True:
 
 
         if len(g):
-            i = 1
-            print("Saved games: ")
-            for _ in g:
-                print(str(i) + ". " + _.id)
-                i += 1
-                
-            
             while True:
+                i = 1
+                print("\nSaved games: ")
+                for _ in g:
+                    print(str(i) + ". " + _.id)
+                    i += 1
+
+                if len(g) == 0:
+                    input("You currently have no saved games. Press ENTER to return to main menu...")
+                    break
+                    
                 s = input("\nEnter serial no. of game to be loaded, press (d) to remove a save, or press (q) to return to main menu-> ")
                 try:
                     s = int(s)
@@ -489,7 +492,7 @@ while True:
                         load.play()
                         break
                     else:
-                        print("Game not found!")
+                        print("Game not found!\n")
                 except ValueError:
                     if s.lower() == "q":
                         break
@@ -508,9 +511,11 @@ while True:
                                     input("Save deleted successfully! Press ENTER to continue...")
                                     break
                                 else:
-                                    print("Game not found!")
+                                    print("Game not found!\n")
+                                    break
                             except ValueError:
-                                pass
+                                print("Invalid input!")
+                                break
                             
         else:
             input("You currently have no saved games. Press ENTER to return to main menu...")
